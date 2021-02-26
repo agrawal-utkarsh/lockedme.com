@@ -4,6 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Directory {
@@ -19,7 +21,17 @@ public class Directory {
         initialize();
     }
 
-    private void initialize(){
+    private static final Comparator<File> sortFileByName() {
+        Comparator comp = new Comparator<File>() {
+            @Override
+            public int compare(File file1, File file2) {
+                return file1.getName().compareTo(file2.getName());
+            }
+        };
+        return comp;
+    }
+
+    private void initialize() {
         this.files = new ArrayList<>();
         File[] files = new File(this.path).listFiles();
         //If this pathname does not denote a directory, then listFiles() returns null.
@@ -49,6 +61,7 @@ public class Directory {
 
     public void listFilesInSortedOrder() {
         System.out.println();
+        Collections.sort(this.files, Directory.sortFileByName());
         for (File file : this.files) {
             System.out.println(file.getName() + "\t");
         }
