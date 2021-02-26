@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -69,26 +68,45 @@ public class Directory {
         //        return List.of(this.path);
     }
 
-    public String addFile(String fileName) throws IOException {
-        Files.createFile(Path.of(this.path + "/" + fileName));
-        initialize();
-        return "success";
+    public String addFile(String fileName) {
+        try {
+            Path filePath = Files.createFile(Path.of(this.path + "/" + fileName));
+            initialize();
+            if (filePath.toFile().exists()) {
+                return "File Created Successfully.";
+            } else {
+                return "Creation Operation Failed.";
+            }
+        } catch (Exception e) {
+            return "File Already Exists.";
+        }
     }
 
-    public String deleteFile(String fileName) throws IOException {
-        Files.deleteIfExists(Path.of(this.path + "/" + fileName));
-        initialize();
-        return "success";
-
+    public String deleteFile(String fileName) {
+        try {
+            boolean result = Files.deleteIfExists(Path.of(this.path + "/" + fileName));
+            initialize();
+            if (result) {
+                return "File Deleted Successfully.";
+            } else {
+                return "Delete Operation Failed.";
+            }
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
     public String searchFile(String fileName) {
-        Paths.get(this.path + "/" + fileName);
-        return "success";
+        Path filePath = Paths.get(this.path + "/" + fileName);
+        if (filePath.toFile().exists()) {
+            return "File Exists.";
+        } else {
+            return "File Doesn't Exist.";
+        }
 
     }
 
-    public String executeOperation(Integer operation, String fileName) throws IOException {
+    public String executeOperation(Integer operation, String fileName) {
         String operationResponse = "";
         switch (operation) {
             case 1:
